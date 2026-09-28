@@ -11,6 +11,7 @@ const CONFIG = {
     get FIELD_H() { return this.HEIGHT - this.HUD_HEIGHT - this.PADDING; },
     BALL_R: 5,
     PADDLE_SPEED: 3.5,
+    BALL_SPEED: 5,
 };
 
 class ArkanoidGame {
@@ -88,6 +89,9 @@ class ArkanoidGame {
 
         this.field.addChild(ball);
         this.ball = ball;
+
+        this.ball.vx = 0;
+        this.ball.vy = 0;
     }
 
     createBlocks() {
@@ -101,6 +105,12 @@ class ArkanoidGame {
             }
             else if(e.key === 'ArrowRight') {
                 this.keys.right = true;
+            }
+            if (e.key === ' ' || e.key === 'Space') {
+                if (this.ball && this.ball.vx === 0 && this.ball.vy === 0) {
+                    this.ball.vx = 3;
+                    this.ball.vy = -3;
+                }
             }
         });
         window.addEventListener('keyup', (e) => {
@@ -124,10 +134,26 @@ class ArkanoidGame {
         if (this.keys.right){
             this.paddle.x += CONFIG.PADDLE_SPEED * delta;
         }
-        
+
         const minX = CONFIG.WALL;
         const maxX = CONFIG.FIELD_W - CONFIG.PADDLE_W - CONFIG.WALL;
         this.paddle.x = Math.max(minX, Math.min(maxX, this.paddle.x));
+
+        this.ball.x += this.ball.vx * delta;
+        this.ball.y += this.ball.vy * delta;
+
+        if(this.ball.x + CONFIG.BALL_R > CONFIG.FIELD_W - CONFIG.WALL){
+            this.ball.vx = -Math.abs(this.ball.vx);                      
+            this.ball.x = CONFIG.FIELD_W - CONFIG.WALL - CONFIG.BALL_R; 
+        }
+        if(this.ball.x - CONFIG.BALL_R < CONFIG.WALL){
+            this.ball.vx = Math.abs(this.ball.vx);                      
+            this.ball.x = CONFIG.WALL + CONFIG.BALL_R; 
+        }
+        if(this.ball.y - CONFIG.BALL_R < CONFIG.WALL){
+            this.ball.vy = Math.abs(this.ball.vy);                      
+            this.ball.y = CONFIG.WALL + CONFIG.BALL_R; 
+        }
     }
 
     destroy() {
