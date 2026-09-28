@@ -5,6 +5,10 @@ const CONFIG = {
     HUD_HEIGHT: 60,
     PADDING: 40, //отступ поля от краёв canvas по бокам
     WALL: 4,
+    PADDLE_W: 100,
+    PADDLE_H: 10,
+    get FIELD_W() { return this.WIDTH - this.PADDING * 2; },
+    get FIELD_H() { return this.HEIGHT - this.HUD_HEIGHT - this.PADDING; },
 };
 
 class ArkanoidGame {
@@ -42,24 +46,31 @@ class ArkanoidGame {
     }
 
     createScenes() {
-        this.field = new PIXI.Container()
-        this.field.x = CONFIG.PADDING, this.field.y = CONFIG.HUD_HEIGHT
-        this.app.stage.addChild(this.field)
-        this.hud = new PIXI.Container()
-        this.app.stage.addChild(this.hud)
+        this.field = new PIXI.Container();
+        this.field.x = CONFIG.PADDING;
+        this.field.y = CONFIG.HUD_HEIGHT;
+        this.app.stage.addChild(this.field);
+        this.hud = new PIXI.Container();
+        this.app.stage.addChild(this.hud);
     }
 
     drawWalls() {
         const FIELD_W = CONFIG.WIDTH - CONFIG.PADDING * 2;
         const FIELD_H = CONFIG.HEIGHT - CONFIG.HUD_HEIGHT - CONFIG.PADDING;
         const walls = new PIXI.Graphics();
-        walls.rect(0, 0, FIELD_W, 4).fill(0xffffff);
-        walls.rect(0, 0, 4, FIELD_H).fill(0xffffff);
-        walls.rect(FIELD_W - 4, 0, 4, FIELD_H).fill(0xffffff);
+        walls.rect(0, 0, FIELD_W, 4).fill(0xa9a9a9);
+        walls.rect(0, 0, 4, FIELD_H).fill(0xa9a9a9);
+        walls.rect(FIELD_W - 4, 0, 4, FIELD_H).fill(0xa9a9a9);
         this.field.addChild(walls);
     }
 
     createPaddle() {
+        const paddle = new PIXI.Graphics();
+        paddle.rect(0, 0, CONFIG.PADDLE_W, CONFIG.PADDLE_H).fill(0xffffff);
+        paddle.x = (CONFIG.FIELD_W - CONFIG.PADDLE_W) / 2;
+        paddle.y = CONFIG.FIELD_H - CONFIG.PADDLE_H - 10;
+        this.field.addChild(paddle);
+        this.paddle = paddle;
     }
 
     createBall() {
@@ -75,6 +86,7 @@ class ArkanoidGame {
     }
 
     update(delta) {
+
     }
 
     destroy() {
