@@ -3,7 +3,7 @@ const CONFIG = {
     WIDTH: 800,
     HEIGHT: 600,
     HUD_HEIGHT: 60,
-    PADDING: 40,
+    PADDING: 40, //отступ поля от краёв canvas по бокам
     WALL: 4,
 };
 
@@ -42,10 +42,15 @@ class ArkanoidGame {
     }
 
     createScenes() {
-
+        this.field = new PIXI.Container()
+        this.field.x = CONFIG.PADDING, this.field.y = CONFIG.HUD_HEIGHT
+        this.app.stage.addChild(this.field)
+        this.hud = new PIXI.Container()
+        this.app.stage.addChild(this.hud)
     }
 
     drawWalls() {
+        
     }
 
     createPaddle() {
