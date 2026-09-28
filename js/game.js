@@ -154,6 +154,27 @@ class ArkanoidGame {
             this.ball.vy = Math.abs(this.ball.vy);                      
             this.ball.y = CONFIG.WALL + CONFIG.BALL_R; 
         }
+
+
+        if (this.ball.vy > 0){
+            const hit = 
+            this.ball.x + CONFIG.BALL_R > this.paddle.x &&
+            this.ball.x - CONFIG.BALL_R < this.paddle.x + CONFIG.PADDLE_W &&
+            this.ball.y + CONFIG.BALL_R > this.paddle.y &&
+            this.ball.y - CONFIG.BALL_R < this.paddle.y + CONFIG.PADDLE_H;
+
+            if(hit) {
+                const paddleCenter = this.paddle.x + CONFIG.PADDLE_W / 2;
+                const rawHitPos = (this.ball.x - paddleCenter) / (CONFIG.PADDLE_W / 2);
+                const hitPos = Math.max(-0.8, Math.min(0.8, rawHitPos));
+                
+                const speed = CONFIG.BALL_SPEED;
+                this.ball.vx = hitPos * speed;
+                this.ball.vy = -Math.sqrt(speed * speed - this.ball.vx * this.ball.vx);
+                this.ball.y = this.paddle.y - CONFIG.BALL_R;
+            }
+        }
+
     }
 
     destroy() {
