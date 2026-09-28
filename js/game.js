@@ -10,6 +10,7 @@ const CONFIG = {
     get FIELD_W() { return this.WIDTH - this.PADDING * 2; },
     get FIELD_H() { return this.HEIGHT - this.HUD_HEIGHT - this.PADDING; },
     BALL_R: 5,
+    PADDLE_SPEED: 3.5,
 };
 
 class ArkanoidGame {
@@ -94,7 +95,22 @@ class ArkanoidGame {
     }
 
     setupInput() {
-
+        window.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowLeft') {
+                this.keys.left = true;
+            }
+            else if(e.key === 'ArrowRight') {
+                this.keys.right = true;
+            }
+        });
+        window.addEventListener('keyup', (e) => {
+            if(e.key === 'ArrowLeft') {
+                this.keys.left = false;
+            }
+            else if(e.key === 'ArrowRight') {
+                this.keys.right = false;
+            }
+        });
     }
 
     setupTicker() {
@@ -102,7 +118,16 @@ class ArkanoidGame {
     }
 
     update(delta) {
+        if (this.keys.left){
+            this.paddle.x -= CONFIG.PADDLE_SPEED * delta;
+        }
+        if (this.keys.right){
+            this.paddle.x += CONFIG.PADDLE_SPEED * delta;
+        }
         
+        const minX = CONFIG.WALL;
+        const maxX = CONFIG.FIELD_W - CONFIG.PADDLE_W - CONFIG.WALL;
+        this.paddle.x = Math.max(minX, Math.min(maxX, this.paddle.x));
     }
 
     destroy() {
