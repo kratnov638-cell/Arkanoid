@@ -50,7 +50,13 @@ class ArkanoidGame {
     }
 
     drawWalls() {
-        
+        const FIELD_W = CONFIG.WIDTH - CONFIG.PADDING * 2;
+        const FIELD_H = CONFIG.HEIGHT - CONFIG.HUD_HEIGHT - CONFIG.PADDING;
+        const walls = new PIXI.Graphics();
+        walls.rect(0, 0, FIELD_W, 4).fill(0xffffff);
+        walls.rect(0, 0, 4, FIELD_H).fill(0xffffff);
+        walls.rect(FIELD_W - 4, 0, 4, FIELD_H).fill(0xffffff);
+        this.field.addChild(walls);
     }
 
     createPaddle() {
