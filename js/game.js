@@ -127,15 +127,15 @@ class ArkanoidGame {
             for (let j = 0; j < CONFIG.BLOCK_COLS; j++){
                 const symbol = LEVEL_MAP[i][j];
                 const type = BLOCK_TYPES[symbol];
-                const bloks = new PIXI.Graphics();
-                bloks.rect(0, 0, CONFIG.BLOCK_W - CONFIG.BLOCK_GAP, CONFIG.BLOCK_H).fill(type.color);
-                bloks.x = (CONFIG.BLOCK_GAP + j * CONFIG.BLOCK_W) + CONFIG.BLOCK_OFFSET_X;
-                bloks.y = CONFIG.BLOCK_TOP + i * (CONFIG.BLOCK_H + CONFIG.BLOCK_GAP);
+                const bloсs = new PIXI.Graphics();
+                bloсs.rect(0, 0, CONFIG.BLOCK_W - CONFIG.BLOCK_GAP, CONFIG.BLOCK_H).fill(type.color);
+                bloсs.x = (CONFIG.BLOCK_GAP + j * CONFIG.BLOCK_W) + CONFIG.BLOCK_OFFSET_X;
+                bloсs.y = CONFIG.BLOCK_TOP + i * (CONFIG.BLOCK_H + CONFIG.BLOCK_GAP);
 
-                bloks.hitsLeft = type.hits;
-                bloks.score = type.score;
-                this.field.addChild(bloks);
-                this.blocks.push(bloks);
+                bloсs.hitsLeft = type.hits;
+                bloсs.score = type.score;
+                this.field.addChild(bloсs);
+                this.blocks.push(bloсs);
             }
         }
     }
