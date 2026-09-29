@@ -184,16 +184,18 @@ class ArkanoidGame {
             }
         }
 
-        if((this.ball.y - CONFIG.BALL_R > CONFIG.FIELD_H) && (this.lives > 0)){
-            this.lives = this.lives - 1;
-            this.ball.vx = 0;
-            this.ball.vy = 0;
-            this.ball.x = this.paddle.x + CONFIG.PADDLE_W / 2;
-            this.ball.y = this.paddle.y - CONFIG.BALL_R - 10;
+        if(this.ball.y - CONFIG.BALL_R > CONFIG.FIELD_H){
+            if(this.lives < 1){
+                this.gameOver = true; 
+            }else{
+                this.lives -= 1;
+                this.ball.vx = 0;
+                this.ball.vy = 0;
+                this.ball.x = this.paddle.x + CONFIG.PADDLE_W / 2;
+                this.ball.y = this.paddle.y - CONFIG.BALL_R - 10;
+            }
         }
-        if(this.lives < 1){
-            this.gameOver = true; 
-        }
+        
     }
 
     destroy() {
