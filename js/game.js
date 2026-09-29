@@ -24,6 +24,8 @@ class ArkanoidGame {
         this.ball = null;     
         this.blocks = [];     
         this.keys = { left: false, right: false };
+        this.lives = 3;
+        this.gameOver = false; 
     }
     
     async init() {
@@ -128,6 +130,8 @@ class ArkanoidGame {
     }
 
     update(delta) {
+        if(this.gameOver) {return;}
+
         if (this.keys.left){
             this.paddle.x -= CONFIG.PADDLE_SPEED * delta;
         }
@@ -138,6 +142,11 @@ class ArkanoidGame {
         const minX = CONFIG.WALL;
         const maxX = CONFIG.FIELD_W - CONFIG.PADDLE_W - CONFIG.WALL;
         this.paddle.x = Math.max(minX, Math.min(maxX, this.paddle.x));
+
+        if (this.ball.vx === 0 && this.ball.vy === 0) {
+            this.ball.x = this.paddle.x + CONFIG.PADDLE_W / 2;
+            this.ball.y = this.paddle.y - CONFIG.BALL_R - 2;
+        }
 
         this.ball.x += this.ball.vx * delta;
         this.ball.y += this.ball.vy * delta;
@@ -175,6 +184,16 @@ class ArkanoidGame {
             }
         }
 
+        if((this.ball.y - CONFIG.BALL_R > CONFIG.FIELD_H) && (this.lives > 0)){
+            this.lives = this.lives - 1;
+            this.ball.vx = 0;
+            this.ball.vy = 0;
+            this.ball.x = this.paddle.x + CONFIG.PADDLE_W / 2;
+            this.ball.y = this.paddle.y - CONFIG.BALL_R - 10;
+        }
+        if(this.lives < 1){
+            this.gameOver = true; 
+        }
     }
 
     destroy() {
