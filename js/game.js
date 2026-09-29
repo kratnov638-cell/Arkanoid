@@ -16,7 +16,8 @@ const CONFIG = {
     BLOCK_ROWS: 6,            
     BLOCK_H: 20,              
     BLOCK_GAP: 4,            
-    BLOCK_TOP: 40,  
+    BLOCK_TOP: 40, 
+    BLOCK_OFFSET_X: 2, 
     get BLOCK_W() { return (this.FIELD_W - this.BLOCK_GAP * 2) / 10 },         
 };
 
@@ -50,6 +51,7 @@ class ArkanoidGame {
         this.keys = { left: false, right: false };
         this.lives = 3;
         this.gameOver = false; 
+        this.score = 0;
     }
     
     async init() {
@@ -123,11 +125,15 @@ class ArkanoidGame {
     createBlocks() {
         for (let i = 0; i < CONFIG.BLOCK_ROWS; i++){
             for (let j = 0; j < CONFIG.BLOCK_COLS; j++){
+                const symbol = LEVEL_MAP[i][j];
+                const type = BLOCK_TYPES[symbol];
                 const bloks = new PIXI.Graphics();
-                bloks.rect(0, 0, CONFIG.BLOCK_W - CONFIG.BLOCK_GAP, CONFIG.BLOCK_H).fill(BLOCK_TYPES[LEVEL_MAP[i][j]].color);
-                bloks.x = (CONFIG.BLOCK_GAP + j * CONFIG.BLOCK_W) + 2;
+                bloks.rect(0, 0, CONFIG.BLOCK_W - CONFIG.BLOCK_GAP, CONFIG.BLOCK_H).fill(type.color);
+                bloks.x = (CONFIG.BLOCK_GAP + j * CONFIG.BLOCK_W) + CONFIG.BLOCK_OFFSET_X;
                 bloks.y = CONFIG.BLOCK_TOP + i * (CONFIG.BLOCK_H + CONFIG.BLOCK_GAP);
 
+                bloks.hitsLeft = type.hits;
+                bloks.score = type.score;
                 this.field.addChild(bloks);
                 this.blocks.push(bloks);
             }
