@@ -148,6 +148,7 @@ class ArkanoidGame {
             fill: 0xffffff,
             fontWeight: 'bold',
         }
+
         const scoreText = new PIXI.Text({ text: 'SCORE: 0', style: style });
         scoreText.x = CONFIG.HUD_PADDING;
         scoreText.y = CONFIG.HUD_PADDING;
@@ -155,10 +156,17 @@ class ArkanoidGame {
         this.scoreText = scoreText;
 
         const livesText = new PIXI.Text({ text: 'LIVES: 3', style: style });
-        livesText.x = CONFIG.WIDTH - CONFIG.HUD_PADDING - 100;
+        livesText.x = CONFIG.WIDTH - CONFIG.HUD_PADDING - 110;
         livesText.y = CONFIG.HUD_PADDING;
         this.hud.addChild(livesText);
-        this.livesText = livesText;
+        this.livesText = livesText
+
+        const gameoverText = new PIXI.Text({ text: 'GAME OVER', style: style });
+        gameoverText.x = CONFIG.WIDTH / 2 - CONFIG.HUD_PADDING - 45;
+        gameoverText.y = CONFIG.HUD_PADDING;
+        this.hud.addChild(gameoverText);
+        this.gameoverText = gameoverText;
+        this.gameoverText.visible = false;
     }
 
     setupInput() {
@@ -176,7 +184,11 @@ class ArkanoidGame {
                     this.ball.vy = -CONFIG.BALL_SPEED;
                 }
             }
+            if(e.key === 'Enter' && this.gameOver){
+                this.restart();
+            }  
         });
+
         window.addEventListener('keyup', (e) => {
             if(e.key === 'ArrowLeft') {
                 this.keys.left = false;
@@ -184,7 +196,24 @@ class ArkanoidGame {
             else if(e.key === 'ArrowRight') {
                 this.keys.right = false;
             }
-        });
+        });  
+    }
+
+    restart() {
+        this.lives = 3;
+        this.gameOver = false; 
+        this.score = 0;
+        for (const block of this.blocks) {
+            this.field.removeChild(block);
+        }
+        this.blocks = [];
+        this.createBlocks();
+        this.ball.vx = 0;
+        this.ball.vy = 0;
+        this.hud.removeChild(this.scoreText);
+        this.hud.removeChild(this.livesText);
+        this.hud.removeChild(this.gameoverText);
+        this.createHUD();
     }
 
     setupTicker() {
@@ -278,7 +307,8 @@ class ArkanoidGame {
 
         if(this.ball.y - CONFIG.BALL_R > CONFIG.FIELD_H){
             if(this.lives < 1){
-                this.gameOver = true; 
+                this.gameOver = true;
+                this.gameoverText.visible = true; 
             }else{
                 this.lives -= 1;
                 this.livesText.text = 'LIVES: ' + this.lives;
