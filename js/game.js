@@ -18,7 +18,8 @@ const CONFIG = {
     BLOCK_GAP: 4,            
     BLOCK_TOP: 40, 
     BLOCK_OFFSET_X: 2, 
-    get BLOCK_W() { return (this.FIELD_W - this.BLOCK_GAP * 2) / 10 },         
+    get BLOCK_W() { return (this.FIELD_W - this.BLOCK_GAP * 2) / 10 },       
+    HUD_PADDING: 20,  
 };
 
 const LEVEL_MAP = [
@@ -72,7 +73,7 @@ class ArkanoidGame {
         this.createBlocks();
         this.setupInput();
         this.setupTicker();
-
+        this.createHUD();
         console.log('init done');
     }
 
@@ -138,6 +139,26 @@ class ArkanoidGame {
                 this.blocks.push(bloсs);
             }
         }
+    }
+
+    createHUD() {
+        const style = {
+            fontfamily: 'Courier New',
+            fontsize: 24,
+            fill: 0xffffff,
+            fontweight: 'bold',
+        }
+        const scoreText = new PIXI.Text({ text: 'SCORE: 0', style: style });
+        scoreText.x = CONFIG.HUD_PADDING;
+        scoreText.y = CONFIG.HUD_PADDING;
+        this.hud.addChild(scoreText);
+        this.scoreText = scoreText;
+
+        const livesText = new PIXI.Text({ text: 'LIVES: 3', style: style });
+        livesText.x = CONFIG.WIDTH - CONFIG.HUD_PADDING - 100;
+        livesText.y = CONFIG.HUD_PADDING;
+        this.hud.addChild(livesText);
+        this.livesText = livesText;
     }
 
     setupInput() {
@@ -245,6 +266,7 @@ class ArkanoidGame {
                 block.hitsLeft -= 1;
                 if (block.hitsLeft < 1){
                     this.score += block.score;
+                    this.scoreText.text = ' SCORE: ' + this.score;
                     this.field.removeChild(block);
                     this.blocks.splice(i, 1);
                 } 
@@ -259,6 +281,7 @@ class ArkanoidGame {
                 this.gameOver = true; 
             }else{
                 this.lives -= 1;
+                this.livesText.text = 'LIVES: ' + this.lives;
                 this.ball.vx = 0;
                 this.ball.vy = 0;
                 this.ball.x = this.paddle.x + CONFIG.PADDLE_W / 2;
