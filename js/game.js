@@ -150,8 +150,9 @@ class ArkanoidGame {
             }
             if (e.key === ' ' || e.key === 'Space') {
                 if (this.ball && this.ball.vx === 0 && this.ball.vy === 0) {
-                    this.ball.vx = 3;
-                    this.ball.vy = -3;
+                    const dir = Math.random() < 0.5 ? -1 : 1;
+                    this.ball.vx = dir;
+                    this.ball.vy = -CONFIG.BALL_SPEED;
                 }
             }
         });
@@ -232,9 +233,21 @@ class ArkanoidGame {
                 this.ball.y + CONFIG.BALL_R > block.y &&
                 this.ball.y - CONFIG.BALL_R < block.y + block.height;
             if (hit_blocks){
-                this.score += block.score;
-                this.field.removeChild(block);
-                this.blocks.splice(i, 1);
+                let overlapX = Math.min(this.ball.x + CONFIG.BALL_R, block.x + block.width) - Math.max(this.ball.x - CONFIG.BALL_R, block.x);
+                let overlapY = Math.min(this.ball.y + CONFIG.BALL_R, block.y + block.height) - Math.max(this.ball.y - CONFIG.BALL_R, block.y);
+                if(overlapX > overlapY){
+                    this.ball.vy = -this.ball.vy;
+                    this.ball.y += overlapY * Math.sign(this.ball.vy);
+                }else{
+                    this.ball.vx = -this.ball.vx;
+                    this.ball.x += overlapX * Math.sign(this.ball.vx); 
+                }
+                block.hitsLeft -= 1;
+                if (block.hitsLeft < 1){
+                    this.score += block.score;
+                    this.field.removeChild(block);
+                    this.blocks.splice(i, 1);
+                } 
                 break;
             }
         }
