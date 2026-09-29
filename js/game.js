@@ -12,7 +12,31 @@ const CONFIG = {
     BALL_R: 5,
     PADDLE_SPEED: 3.5,
     BALL_SPEED: 5,
+    BLOCK_COLS: 10,           
+    BLOCK_ROWS: 6,            
+    BLOCK_H: 20,              
+    BLOCK_GAP: 4,            
+    BLOCK_TOP: 40,  
+    get BLOCK_W() { return (this.FIELD_W - this.BLOCK_GAP * 2) / 10 },         
 };
+
+const LEVEL_MAP = [
+    "SSSSSSSSSS",   
+    "RRRRRRRRRR",   
+    "BBBBBBBBBB",   
+    "YYYYYYYYYY",   
+    "PPPPPPPPPP",  
+    "GGGGGGGGGG",   
+];
+
+const BLOCK_TYPES = {
+    'S': { color: 0xc0c0c0, hits: 2, score: 50 },  
+    'R': { color: 0xff0000, hits: 1, score: 90 },  
+    'B': { color: 0x0000ff, hits: 1, score: 100 },  
+    'Y': { color: 0xffff00, hits: 1, score: 120 },  
+    'P': { color: 0xff69b4, hits: 1, score: 110 },  
+    'G': { color: 0x00ff00, hits: 1, score: 80 },   
+}
 
 class ArkanoidGame {
     constructor(containerId) {
@@ -97,7 +121,17 @@ class ArkanoidGame {
     }
 
     createBlocks() {
+        for (let i = 0; i < CONFIG.BLOCK_ROWS; i++){
+            for (let j = 0; j < CONFIG.BLOCK_COLS; j++){
+                const bloks = new PIXI.Graphics();
+                bloks.rect(0, 0, CONFIG.BLOCK_W - CONFIG.BLOCK_GAP, CONFIG.BLOCK_H).fill(BLOCK_TYPES[LEVEL_MAP[i][j]].color);
+                bloks.x = (CONFIG.BLOCK_GAP + j * CONFIG.BLOCK_W) + 2;
+                bloks.y = CONFIG.BLOCK_TOP + i * (CONFIG.BLOCK_H + CONFIG.BLOCK_GAP);
 
+                this.field.addChild(bloks);
+                this.blocks.push(bloks);
+            }
+        }
     }
 
     setupInput() {
