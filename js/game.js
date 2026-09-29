@@ -143,10 +143,10 @@ class ArkanoidGame {
 
     createHUD() {
         const style = {
-            fontfamily: 'Courier New',
-            fontsize: 24,
+            fontFamily: 'Courier New',
+            fontSize: 24,
             fill: 0xffffff,
-            fontweight: 'bold',
+            fontWeight: 'bold',
         }
         const scoreText = new PIXI.Text({ text: 'SCORE: 0', style: style });
         scoreText.x = CONFIG.HUD_PADDING;
@@ -266,7 +266,7 @@ class ArkanoidGame {
                 block.hitsLeft -= 1;
                 if (block.hitsLeft < 1){
                     this.score += block.score;
-                    this.scoreText.text = ' SCORE: ' + this.score;
+                    this.scoreText.text = 'SCORE: ' + this.score;
                     this.field.removeChild(block);
                     this.blocks.splice(i, 1);
                 } 
