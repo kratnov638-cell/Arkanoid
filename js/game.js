@@ -224,6 +224,23 @@ class ArkanoidGame {
             }
         }
 
+        for (let i = this.blocks.length - 1; i >= 0; i--) {
+            const block = this.blocks[i];
+            const hit_blocks =
+                this.ball.x + CONFIG.BALL_R > block.x &&
+                this.ball.x - CONFIG.BALL_R < block.x + block.width &&
+                this.ball.y + CONFIG.BALL_R > block.y &&
+                this.ball.y - CONFIG.BALL_R < block.y + block.height;
+            if (hit_blocks){
+                this.score += block.score;
+                this.field.removeChild(block);
+                this.blocks.splice(i, 1);
+                break;
+            }
+        }
+
+
+
         if(this.ball.y - CONFIG.BALL_R > CONFIG.FIELD_H){
             if(this.lives < 1){
                 this.gameOver = true; 
