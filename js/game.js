@@ -130,6 +130,13 @@ class ArkanoidGame {
                 const type = BLOCK_TYPES[symbol];
                 const bloсs = new PIXI.Graphics();
                 bloсs.rect(0, 0, CONFIG.BLOCK_W - CONFIG.BLOCK_GAP, CONFIG.BLOCK_H).fill(type.color);
+                const flash = new PIXI.Graphics();
+
+                flash.rect(0, 0, CONFIG.BLOCK_W - CONFIG.BLOCK_GAP, CONFIG.BLOCK_H).fill(0xffffff);
+                flash.alpha = 0; 
+                bloсs.addChild(flash);
+                bloсs.flash = flash;
+
                 bloсs.x = (CONFIG.BLOCK_GAP + j * CONFIG.BLOCK_W) + CONFIG.BLOCK_OFFSET_X;
                 bloсs.y = CONFIG.BLOCK_TOP + i * (CONFIG.BLOCK_H + CONFIG.BLOCK_GAP);
 
@@ -292,6 +299,10 @@ class ArkanoidGame {
                     this.ball.vx = -this.ball.vx;
                     this.ball.x += overlapX * Math.sign(this.ball.vx); 
                 }
+                block.flash.alpha = 1;
+                setTimeout(() => {
+                    if (block.flash) block.flash.alpha = 0;
+                }, 100);
                 block.hitsLeft -= 1;
                 if (block.hitsLeft < 1){
                     this.score += block.score;
